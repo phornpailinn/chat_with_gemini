@@ -51,7 +51,8 @@ if uploaded_file is not None:
         st.success("File successfully uploaded and read.")
  
 # Display the content of the CSV
-        st.write("### Uploaded Data Preview") st.dataframe(st.session_state.uploaded_data.head())
+        st.write("### Uploaded Data Preview") 
+        st.dataframe(st.session_state.uploaded_data.head())
     except Exception as e:
         st.error(f"An error occurred while reading the file: {e}")
 
