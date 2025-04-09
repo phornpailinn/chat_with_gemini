@@ -54,18 +54,14 @@ if user_input := st.chat_input("Type your message here..."):
         try:
             if st.session_state.uploaded_data is not None and analyze_data_checkbox:
                 # Check if user requested data analysis or insights
-                if "analyze" in user_input.lower() or "insight" in user_input.lower():
-                    # Create a description of the data for the AI model
-                    data_description = st.session_state.uploaded_data.describe().to_string()
-                    prompt = f"Analyze the following dataset and provide insights:\n\n{data_description}"
+               if "analyze" in user_input.lower() or "insight" in user_input.lower():
+                   data_description = st.session_state.uploaded_data.describe().to_string()
+                   prompt = f"Analyze the following dataset and provide insights, focusing only on statistical information and not on personal data:\n\n{data_description}"
+                   response = model.generate_content(prompt)
+                   bot_response = response.text
+                   st.session_state.chat_history.append(("assistant", bot_response))
+                   st.chat_message("assistant").markdown(bot_response)
 
-                    # Generate AI response for the data analysis
-                    response = model.generate_content(prompt)
-                    bot_response = response.text
-
-                    # Store and display the AI-generated analysis
-                    st.session_state.chat_history.append(("assistant", bot_response))
-                    st.chat_message("assistant").markdown(bot_response)
                 else:
                     # Normal conversation with the bot
                     response = model.generate_content(user_input)
