@@ -15,13 +15,11 @@ try:
 except Exception as e: 
     st.error(f"An error occurred while setting up the Gemini model: {e}") 
 
-# Initialize session state for storing chat history, uploaded data, and data dictionary
+# Initialize session state for storing chat history and data
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []  # Initialize with an empty list
 if "uploaded_data" not in st.session_state:
     st.session_state.uploaded_data = None  # Placeholder for uploaded CSV data
-if "data_dictionary" not in st.session_state:
-    st.session_state.data_dictionary = None  # Placeholder for uploaded Data Dictionary
 
 # Display previous chat history using st.chat_message (if available)
 for role, message in st.session_state.chat_history:
@@ -30,34 +28,20 @@ for role, message in st.session_state.chat_history:
 # Add a file uploader for CSV data
 st.subheader("Upload CSV for Analysis")
 uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+
 if uploaded_file is not None:
     try:
         # Load the uploaded CSV file
         st.session_state.uploaded_data = pd.read_csv(uploaded_file)
         st.success("File successfully uploaded and read.")
-
+        
         # Display the content of the CSV
         st.write("### Uploaded Data Preview")
         st.dataframe(st.session_state.uploaded_data.head())
     except Exception as e:
         st.error(f"An error occurred while reading the file: {e}")
 
-# Add a file uploader for Data Dictionary
-st.subheader("Upload Data Dictionary (CSV)")
-data_dict_file = st.file_uploader("Choose a Data Dictionary file", type=["csv"])
-if data_dict_file is not None:
-    try:
-        # Load the uploaded Data Dictionary
-        st.session_state.data_dictionary = pd.read_csv(data_dict_file)
-        st.success("Data Dictionary successfully uploaded and read.")
-
-        # Display the content of the Data Dictionary
-        st.write("### Data Dictionary Preview")
-        st.dataframe(st.session_state.data_dictionary.head())
-    except Exception as e:
-        st.error(f"An error occurred while reading the Data Dictionary: {e}")
-
-# Checkbox for indicating data analysis need
+# Checkbox for indicating data analysis
 analyze_data_checkbox = st.checkbox("Analyze CSV Data with AI")
 
 # Capture user input and generate bot response
@@ -66,21 +50,14 @@ if user_input := st.chat_input("Type your message here..."):
     st.session_state.chat_history.append(("user", user_input))
     st.chat_message("user").markdown(user_input)
 
-    # Determine if user input is a request for data analysis and the checkbox is selected
     if model:
         try:
-            # Check if CSV file is uploaded and checkbox for analysis is selected
             if st.session_state.uploaded_data is not None and analyze_data_checkbox:
+                # Check if user requested data analysis or insights
                 if "analyze" in user_input.lower() or "insight" in user_input.lower():
                     # Create a description of the data for the AI model
                     data_description = st.session_state.uploaded_data.describe().to_string()
-
-                    # Optionally add the data dictionary to the prompt for more context
-                    if st.session_state.data_dictionary is not None:
-                        data_dict_description = st.session_state.data_dictionary.to_string()
-                        prompt = f"Analyze the following dataset and provide insights:\n\n{data_description}\n\nData Dictionary:\n{data_dict_description}"
-                    else:
-                        prompt = f"Analyze the following dataset and provide insights:\n\n{data_description}"
+                    prompt = f"Analyze the following dataset and provide insights:\n\n{data_description}"
 
                     # Generate AI response for the data analysis
                     response = model.generate_content(prompt)
@@ -102,9 +79,9 @@ if user_input := st.chat_input("Type your message here..."):
                 bot_response = "Data analysis is disabled. Please select the 'Analyze CSV Data with AI' checkbox to enable analysis."
                 st.session_state.chat_history.append(("assistant", bot_response))
                 st.chat_message("assistant").markdown(bot_response)
-            elif st.session_state.uploaded_data is None:
+            else:
                 # Respond with a message to upload a CSV file if not yet done
-                bot_response = "Please upload a CSV file first, then check the 'Analyze CSV Data with AI' checkbox to enable analysis."
+                bot_response = "Please upload a CSV file first, then ask me to analyze it."
                 st.session_state.chat_history.append(("assistant", bot_response))
                 st.chat_message("assistant").markdown(bot_response)
         except Exception as e:
