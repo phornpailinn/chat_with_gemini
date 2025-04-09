@@ -71,7 +71,6 @@ if user_input := st.chat_input("Type your message here..."):
         try:
             # Check if CSV file is uploaded and checkbox for analysis is selected
             if st.session_state.uploaded_data is not None and analyze_data_checkbox:
-                # Check if user requested data analysis or insights
                 if "analyze" in user_input.lower() or "insight" in user_input.lower():
                     # Create a description of the data for the AI model
                     data_description = st.session_state.uploaded_data.describe().to_string()
@@ -103,7 +102,7 @@ if user_input := st.chat_input("Type your message here..."):
                 bot_response = "Data analysis is disabled. Please select the 'Analyze CSV Data with AI' checkbox to enable analysis."
                 st.session_state.chat_history.append(("assistant", bot_response))
                 st.chat_message("assistant").markdown(bot_response)
-            else:
+            elif st.session_state.uploaded_data is None:
                 # Respond with a message to upload a CSV file if not yet done
                 bot_response = "Please upload a CSV file first, then check the 'Analyze CSV Data with AI' checkbox to enable analysis."
                 st.session_state.chat_history.append(("assistant", bot_response))
