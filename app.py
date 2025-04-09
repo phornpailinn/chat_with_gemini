@@ -132,7 +132,7 @@ if question := st.chat_input("Type your message Here... "):
             
 
     
-        except Exception as e :
+  except Exception as e :
         st.error(f'n error occurred while generating the response {e}')
 
 
