@@ -8,8 +8,8 @@ st.subheader("Conversation and Data Analysis")
 
 # Initialize the Gemini Model without the API Key 
 try: 
-    # Initialize the model directly (assuming the API key is already set in the environment or config)
-    genai.configure(api_key="YOUR_API_KEY")  # Here you can use an environment variable for the API key
+    key = st.secrets['gemini_api_key']
+    genai.configure(api_key=key)
     model = genai.GenerativeModel("gemini-pro")
     st.success("Gemini model successfully configured.") 
 except Exception as e: 
