@@ -69,6 +69,7 @@ if user_input := st.chat_input("Type your message here..."):
     # Determine if user input is a request for data analysis and the checkbox is selected
     if model:
         try:
+            # Check if CSV file is uploaded and checkbox for analysis is selected
             if st.session_state.uploaded_data is not None and analyze_data_checkbox:
                 # Check if user requested data analysis or insights
                 if "analyze" in user_input.lower() or "insight" in user_input.lower():
