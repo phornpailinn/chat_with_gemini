@@ -8,8 +8,8 @@ st.subheader("Conversation and Data Analysis")
 
 # Initialize the Gemini Model without the API Key 
 try: 
-    key = st.secrets['gemini_api_key']
-    genai.configure(api_key=key)
+    # Initialize the model directly (assuming the API key is already set in the environment or config)
+    genai.configure(api_key="YOUR_API_KEY")  # Here you can use an environment variable for the API key
     model = genai.GenerativeModel("gemini-pro")
     st.success("Gemini model successfully configured.") 
 except Exception as e: 
@@ -99,12 +99,16 @@ if user_input := st.chat_input("Type your message here..."):
                     st.chat_message("assistant").markdown(bot_response) 
             elif not analyze_data_checkbox: 
                 # Respond that analysis is not enabled if the checkbox is not selected 
-                bot_response = "Data analysis is disabled. Please select the 'Analyze CSV Data with AI' checkbox to enable analysis." 
+                bot_response = (
+                    "Data analysis is disabled. Please check the 'Analyze CSV Data with AI' checkbox to enable analysis and get insights."
+                ) 
                 st.session_state.chat_history.append(("assistant", bot_response)) 
                 st.chat_message("assistant").markdown(bot_response) 
             else: 
                 # Respond with a message to upload a CSV file if not yet done 
-                bot_response = "Please upload a CSV file first, then ask me to analyze it." 
+                bot_response = (
+                    "Please upload a CSV file first, then check the 'Analyze CSV Data with AI' checkbox to enable analysis."
+                ) 
                 st.session_state.chat_history.append(("assistant", bot_response)) 
                 st.chat_message("assistant").markdown(bot_response) 
         except Exception as e: 
