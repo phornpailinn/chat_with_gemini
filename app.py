@@ -10,7 +10,7 @@ st.subheader("Conversation and Data Analysis")
 try: 
     key = st.secrets['gemini_api_key']
     genai.configure(api_key=key)
-    model = genai.GenerativeModel("gemini-pro")
+    model = genai.GenerativeModel("gemini-2.0-flash-lite")
     st.success("Gemini model successfully configured.") 
 except Exception as e: 
     st.error(f"An error occurred while setting up the Gemini model: {e}") 
