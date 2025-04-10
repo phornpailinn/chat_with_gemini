@@ -19,8 +19,8 @@ data_dict_text = '\n'.join(
 st.title("🐧 My Chatbot and Data Analysis App") 
 st.subheader("Conversation and Data Analysis")
 
-# 📊 Data Snapshot
-st.markdown("## 📊 Data Snapshot")
+# Data Snapshot
+st.markdown("## Data Description")
 st.markdown("This dataset (CSV file) contains transaction data with the following columns:")
 for index, row in data_dict_df.iterrows():
     st.markdown(f"**{row['column_name']}** ({row['data_type']}): {row['description']}")
